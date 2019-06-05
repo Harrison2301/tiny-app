@@ -1,3 +1,4 @@
+var randomstring = require("randomstring");
 var express = require("express");
 var app = express();
 var PORT = 8080; // default port 8080
@@ -9,12 +10,19 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
+});
+
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
 });
 
 app.get("/urls.json", (req, res) => {
@@ -36,3 +44,17 @@ app.get("/urls.json", (req, res) => {
   
     res.render("urls_show", templateVars);
   });
+  app.post("/urls", (req, res) => {
+   let randomstring = require("randomstring");
+   let short = randomstring.generate(6);
+   urlDatabase[short] = req.body.longURL
+
+    console.log(req.body);  // Log the POST request body to the console
+    res.redirect("/urls") // Respond with 'Ok' (we will replace this)
+  });
+
+  app.get("/u/:shortURL", (req, res) => {
+    const longerURL = urlDatabase[req.params.shortURL]
+    res.redirect(longerURL);
+  });
+  
