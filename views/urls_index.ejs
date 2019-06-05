@@ -13,11 +13,14 @@
         <% include partials/_header.ejs %>
       </header>
     <ul>
-        <% for (var propertys in urls){ %>
-<li><%=propertys %> : <%=urls[propertys] %></li>
+        <% for (var shortURL in urls){ %>
+<li><%=shortURL %> : <%=urls[shortURL] %></li>
+  <form method="POST" action="/urls/<%=shortURL%>/delete">
+    <button type="submit" value="">Delete</button>
+  </form>
         <% }%> 
         </ul>
     </ul>
-    <a href='#'> Create New TinyURL</a>
+    <a href='/urls/new'> Create New TinyURL</a>
 </body>
 </html>
