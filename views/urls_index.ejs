@@ -17,10 +17,12 @@
 <li><%=shortURL %> : <%=urls[shortURL] %></li>
   <form method="POST" action="/urls/<%=shortURL%>/delete">
     <button type="submit" value="">Delete</button>
+    <a href="/urls/shortURL">Edit</a>
   </form>
         <% }%> 
         </ul>
     </ul>
+    
     <a href='/urls/new'> Create New TinyURL</a>
 </body>
 </html>
