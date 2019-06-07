@@ -1,0 +1,12 @@
+<% if(!username && !users){ %>
+<form method= "POST" action="/login" name ="username"> 
+    <label>Username:</label>
+    <input type="text" name="username" id="username">
+    <button type= "submit">sign in</button>
+  </form>
+  <% } else { %>  
+Email: <%= users[username].email %>
+ <form action = "/logout" method = "POST"> 
+ <button class = "float-left submit-button">Logout</button>
+</form>
+<% } %> 

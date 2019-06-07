@@ -7,6 +7,20 @@ app.use(cookieParser())
 
 app.set("view engine", "ejs");
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
+
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -48,7 +62,6 @@ app.get("/urls.json", (req, res) => {
     res.render("urls_show", templateVars);
   });
   app.post("/urls", (req, res) => {
-   let randomstring = require("randomstring");
    let short = randomstring.generate(6);
    urlDatabase[short] = req.body.longURL
 
@@ -82,3 +95,36 @@ app.get("/urls.json", (req, res) => {
     res.clearCookie("username")
     res.redirect("/urls")
   });
+
+  app.get ("/register", (req, res) => {
+    res.render("register.ejs", {username: ''})
+  })
+ 
+  const findingExistingUser = (email) => {
+    for(userId in users){
+      if(users[userId].email === email){
+        return users[userId]
+      }
+    }
+  }
+
+  app.post ("/register", (req, res) => {
+   var newObj = {};
+   const lEmail = req.body.email
+  let iD = randomstring.generate(6)
+   let foundUser = findingExistingUser(lEmail)
+   console.log(foundUser)
+  if (lEmail === ""){
+    res.status(400)
+    res.end('No good')
+  } else if(foundUser){
+    res.status(400)
+    res.end('No good')
+  } else {
+    newObj.id = iD
+    newObj.email = lEmail
+    newObj.password = req.body.password
+    users[iD] = newObj
+    res.cookie("username", lEmail)
+    res.redirect("/urls")
+  }})
