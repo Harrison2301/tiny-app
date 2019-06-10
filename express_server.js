@@ -3,15 +3,19 @@ var express = require("express");
 var app = express();
 var PORT = 8080; // default port 8080
 var cookieParser = require('cookie-parser');
-app.use(cookieParser())
+app.use(cookieParser());
+// var cookieSession = require("cookie-session");
+// app.use(cookieSession());
+// var bcrypt = require("bcrypt");
+ 
 
 app.set("view engine", "ejs");
 
 const users = { 
   "userRandomID": {
     id: "userRandomID", 
-    email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    email: "harrison.winters@hotmail.com", 
+    password: "harrison"
   },
  "user2RandomID": {
     id: "user2RandomID", 
@@ -20,25 +24,35 @@ const users = {
   }
 }
 
-
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+const findingExistingUser = (email) => {
+  for(userId in users){
+    if(users[userId].email === email){
+      return users[userId]
+    }
+  }
+  return false
+}
+
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
+// ************* GET *************
 app.get("/urls/new", (req, res) => {
-  let templateVars = {username: req.cookies["username"]};
+  const userId = req.cookies.user_id;
+  const user = users[userId];
+  let templateVars = {
+    user: user
+  }
   res.render("urls_new", templateVars);
 });
 
@@ -51,30 +65,56 @@ app.get("/urls.json", (req, res) => {
   });
 
   app.get("/urls", (req, res) => {
-    let templateVars = { urls: urlDatabase,username: req.cookies["username"]};
+    let userid= req.cookies["user_id"]
+    console.log(userid)
+    console.log(users[userid])
+    let templateVars = { urls: urlDatabase,user: users[userid]}
     res.render("urls_index", templateVars);
   });
 
   app.get("/urls/:shortURL", (req, res) => {
-    let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL],username: req.cookies["username"]};
+    let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL],users: [req.cookies.user_id]};
     //console.log(urlDatabase[req.params.shortURL])
   
     res.render("urls_show", templateVars);
-  });
-  app.post("/urls", (req, res) => {
-   let short = randomstring.generate(6);
-   urlDatabase[short] = req.body.longURL
-
-    console.log(req.body);  // Log the POST request body to the console
-    res.redirect("/urls") // Respond with 'Ok' (we will replace this)
   });
 
   app.get("/u/:shortURL", (req, res) => {
     const longerURL = urlDatabase[req.params.shortURL]
     res.redirect(longerURL);
   });
-  
-  
+
+  app.get ("/register", (req, res) => {
+    res.render("register.ejs", {user: users[req.cookies.user_id]})
+  })
+
+  app.get("/login", (req, res) => {
+    
+    res.render("login")
+  });
+  // ************* POST *************
+
+  app.post("/login", (req, res) => {
+    let email = req.body.email 
+    let password = req.body.password
+    let user = findingExistingUser(email)
+    if (user && user.password === password){
+      res.cookie("user_id",user.id)
+      res.redirect("/urls");
+    } else { res.send ("<html><body>Wrong <b>Email/Password</b></body></html>\n")
+      
+    }
+    
+  });
+
+  app.post("/urls", (req, res) => {
+   let short = randomstring.generate(6);
+   urlDatabase[short] = req.body.longURL
+
+    console.log(req.body);  
+    res.redirect("/urls") 
+  });
+
   app.post("/urls/:shortURL/delete", (req, res) => {
    delete urlDatabase[req.params.shortURL]
     res.redirect("/urls")
@@ -85,30 +125,13 @@ app.get("/urls.json", (req, res) => {
    res.redirect("/urls")
  });
   
-  app.post("/login", (req, res) => {
-    res.cookie("username", req.body.username);
-    res.redirect("/urls");
-  });
-  
-
-  app.post("/logout", (req, res) => {
-    res.clearCookie("username")
+    app.post("/logout", (req, res) => {
+    res.clearCookie("user_id")
     res.redirect("/urls")
   });
 
-  app.get ("/register", (req, res) => {
-    res.render("register.ejs", {username: ''})
-  })
  
-  const findingExistingUser = (email) => {
-    for(userId in users){
-      if(users[userId].email === email){
-        return users[userId]
-      }
-    }
-  }
-
-  app.post ("/register", (req, res) => {
+app.post ("/register", (req, res) => {
    var newObj = {};
    const lEmail = req.body.email
   let iD = randomstring.generate(6)
@@ -125,6 +148,8 @@ app.get("/urls.json", (req, res) => {
     newObj.email = lEmail
     newObj.password = req.body.password
     users[iD] = newObj
-    res.cookie("username", lEmail)
+    res.cookie("user_id", iD)
     res.redirect("/urls")
   }})
+
+  
