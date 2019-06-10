@@ -4,9 +4,13 @@ var app = express();
 var PORT = 8080; // default port 8080
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
-// var cookieSession = require("cookie-session");
-// app.use(cookieSession());
-// var bcrypt = require("bcrypt");
+// // var cookieSession = require("cookie-session");
+// // app.use(cookieSession({
+//   name: "cookieSession",
+//   keys: ["secret"]
+//   maxAge: 24 * 60 * 60 * 1000
+// }))
+// // var bcrypt = require("bcrypt");
  
 
 app.set("view engine", "ejs");
@@ -66,8 +70,8 @@ app.get("/urls.json", (req, res) => {
 
   app.get("/urls", (req, res) => {
     let userid= req.cookies["user_id"]
-    console.log(userid)
-    console.log(users[userid])
+    //console.log(userid["email"])
+    console.log(users[req.cookies["user_id"]].email)
     let templateVars = { urls: urlDatabase,user: users[userid]}
     res.render("urls_index", templateVars);
   });
@@ -89,7 +93,7 @@ app.get("/urls.json", (req, res) => {
   })
 
   app.get("/login", (req, res) => {
-    
+   let templateVars = (users[req.cookies["user_id"]].email)
     res.render("login")
   });
   // ************* POST *************
