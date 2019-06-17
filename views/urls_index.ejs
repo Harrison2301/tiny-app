@@ -6,24 +6,32 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>TinyApp</title>
+
 </head>
 <body style="font-size:20px; padding:50px;">
     <header> 
       <%- include partials/_header.ejs %>
       </header>
       <a href='/urls/new'> Create New TinyURL</a>
+      
+      <% if (user) { %>
+        <% Object.keys(urls).forEach(function(id) { %>
+          <% var url = urls[id] %>
+          <% if(url.userID === user_id) { %>
+
+     
     <ul>
-        <% for (var shortURL in urls){ %>
-<li><%=shortURL %> : <%=urls[shortURL] %></li>
-  <form method="POST" action="/urls/<%=shortURL%>/delete">
+<li><a href='/u/<%= url.shortURL %>'><%= url.shortURL %></a> : <%= url.longURL %></li>
+
+  <form method="POST" action="/urls/<%= url.shortURL %>/delete">
     <button type="submit" value="">Delete</button>
-    <a href="/urls/shortURL">Edit</a>
+    <a href="/urls/<%= url.shortURL %>">Edit</a>
   </form>
         <% } %> 
+        <% }); %>
         </ul>
     </ul>
-    
+    <% } %>
 
 </body>
 </html>

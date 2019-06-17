@@ -12,15 +12,20 @@
     <header> 
         <%- include partials/_header.ejs %>
       </header>
+
+     
       <ul>
         
     
       <li><%=shortURL %> : <%=longURL %></li>
-    
+      <% if (user) { %>
     <li><form method="POST" action="/urls/<%=shortURL%>" name="UpdatedUrl">
       <input type ="text" name="longURL"> <button type="submit">Update</button>
       </form>
       </li>
+      <% } else { %>
+        <a href="/register">Register</a><a href="/login">Login</a>
+        <% } %>
     </ul>
     
 </body>
