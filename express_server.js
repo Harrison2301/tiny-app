@@ -133,10 +133,14 @@ app.post("/logout", (req, res) => {
 
 app.get("/register", (req, res) => {
   let userId = req.session.user_id;
+  const user = users[userId];
+  let templateVars = {
+    user: user
+  }
   if(userId) {
     res.redirect('/urls');
   } else {
-  res.render("register");
+  res.render("register", templateVars);
   }
 });
 
