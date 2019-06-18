@@ -14,11 +14,11 @@
       </header>
 
      
-      <ul>
+
         
         <% if (user) { %>
       Update URL:
-    <li><form method="POST" action="/urls/<%=shortURL%>" name="UpdatedUrl">
+    <li><form method="POST" action="/urls/<%= shortURL %>" name="UpdatedUrl">
       <input type="url" name="longURL"> <button type="submit">Update</button>
       </form>
       </li>

@@ -220,37 +220,37 @@ app.get("/urls.json", (req, res) => {
       res.redirect(urlDatabase[req.params.id].longURL);
     }
     });
-
-  app.get("/urls/:id", (req, res) => {
-    var shortUrl = req.params.id;
-    var userID = req.session.user_id;
-    var user = users[userID];
-
-    if(userURL(userID, shortUrl)) {
-      let templateVars = {
-        shortURL: req.params.shortURL,
-        longURL: req.params.longURL,
-        urlObj: urlDatabase[req.params.id],
-        user: user
-      };
-      
-      res.render("urls_show", templateVars,);
+    app.get("/urls/:id", (req, res) => {
+      var shortUrl = req.params.id;
+      var userID = req.session.user_id;
+      var user = users[userID];
+   
+      if(userURL(userID, shortUrl)) {
+        let templateVars = {
+          shortURL: shortUrl,
+          longURL: req.params.longURL,
+          urlObj: urlDatabase[req.params.id],
+          user: user
+        };
+       
+        res.render("urls_show", templateVars,);
+      }
+      else {
+        res.status(400).send("Can not edit this URL");
+      }
+    });
+   
+   //**URLS */**POST */
+    app.post("/urls/:id", (req, res) => {
+    let userID = req.session.user_id;
+    if(userID){
+      urlDatabase[req.params.id].longURL = req.body.longURL;
+      res.redirect("/urls");
+    } else {
+      res.status(400).send("You do not have permission");
     }
-    else {
-      res.status(400).send("Can not edit this URL");
-    }
-  });
-
-//**URLS */**POST */
-  app.post("/urls/:id", (req, res) => {
-  let userID = req.session.user_id;
-  if(userID){
-    urlDatabase[req.params.id].longURL = req.body.longURL;
-    res.redirect("/urls/:id");
-  } else {
-    res.status(400).send("You do not have permission");
-  }
-  });
+    });
+   
 
   app.post("/urls/:id/delete", (req, res) => {
     var ObjURL = urlDatabase[req.params.id];
@@ -271,6 +271,3 @@ app.get("/urls.json", (req, res) => {
     }
      res.redirect("/urls") 
    });
-
- 
-  
