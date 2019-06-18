@@ -21,7 +21,7 @@
 
      
     <ul>
-<li><a href='/u/<%= url.shortURL %>'><%= url.shortURL %></a> : <%= url.longURL %></li>
+<li><a target="blank" href='/u/<%= url.shortURL %>'><%= url.shortURL %></a> : <%= url.longURL %></li>
 
   <form method="POST" action="/urls/<%= url.shortURL %>/delete">
     <button type="submit" value="">Delete</button>

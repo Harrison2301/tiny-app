@@ -16,11 +16,10 @@
      
       <ul>
         
-    
-      <li><%=shortURL %> : <%=longURL %></li>
-      <% if (user) { %>
+        <% if (user) { %>
+      Update URL:
     <li><form method="POST" action="/urls/<%=shortURL%>" name="UpdatedUrl">
-      <input type ="text" name="longURL"> <button type="submit">Update</button>
+      <input type="url" name="longURL"> <button type="submit">Update</button>
       </form>
       </li>
       <% } else { %>

@@ -58,6 +58,9 @@ var urlDatabase = {
     userID: "user2RandomID"
   }
 };
+
+
+
 app.use(function(req, res, next) {
   res.locals.user_id = req.session.user_id || false;
   next();
@@ -78,12 +81,14 @@ const findingExistingUser = (email) => {
 // indicates if shortURL is under correct user 
 function userURL (userId, shortURL) {
   for (var id in urlDatabase) {
+    if ((urlDatabase[id].userID === userId && urlDatabase[id].shortURL === shortURL)) {
+      return true;
+    } 
+  }
+  return false;
 
-    if ((urlDatabase[id].userId === userId) 
-    
-    && (urlDatabase[id].shortURL === shortURL)) return true;
-  } return false;
 }
+
 
 //indicates correct user 
 function correctUser(email, password){
@@ -100,6 +105,7 @@ function correctUser(email, password){
   } return userID;
 }
 
+
 // Login get and post
 
 app.get("/login", (req, res) => {
@@ -107,6 +113,7 @@ app.get("/login", (req, res) => {
   let templateVars = { user: users[req.session.user_id], urls: urlDatabase};
     res.render("login", templateVars);
  });
+ 
 
 
  app.post("/login", (req, res) => {
@@ -164,7 +171,15 @@ app.get("/register", (req, res) => {
   }
 });
 
-//**URLS */**GET */
+
+app.get("/", (req, res) => {
+  let userId = req.session.user_id;
+  if (userId){
+  res.redirect("/urls");
+  } else {
+    res.redirect("/login")
+  }
+});
 
 app.get("/urls/new", (req, res) => {
   const userId = req.session.user_id;
@@ -180,6 +195,7 @@ app.get("/urls.json", (req, res) => {
     res.json(urlDatabase);
   });
 
+ 
   app.get("/urls", (req, res) => {
     let userId = req.session.user_id;
     let user = users[userId];
@@ -191,36 +207,39 @@ app.get("/urls.json", (req, res) => {
       res.render("urls_index", templateVars);
 
     } else {
-      res.status(400).send("Please log in first");
+      res.status(400).send("Please login!");
     }
   });
+
+
+  app.get("/u/:id", (req, res) => {
+    if (!urlDatabase[req.params.id]){
+      res.status(400).send("No good");
+  
+    } else {
+      res.redirect(urlDatabase[req.params.id].longURL);
+    }
+    });
 
   app.get("/urls/:id", (req, res) => {
     var shortUrl = req.params.id;
     var userID = req.session.user_id;
     var user = users[userID];
+
     if(userURL(userID, shortUrl)) {
       let templateVars = {
+        shortURL: req.params.shortURL,
+        longURL: req.params.longURL,
         urlObj: urlDatabase[req.params.id],
         user: user
       };
-      res.render("urls_show", templateVars);
-    } else if(urlDatabase[req.params.id]) {
-      res.redirect('/urls');
-    } else {
-      res.status(400).send("No good");
+      
+      res.render("urls_show", templateVars,);
     }
-  }) 
-
-  app.get("/u/:id", (req, res) => {
-  if (!urlDatabase[req.params.id]){
-    res.status(400).send("No good");
-
-  } else {
-    res.redirect(urlDatabase[req.params.id].longURL);
-  }
+    else {
+      res.status(400).send("Can not edit this URL");
+    }
   });
-  
 
 //**URLS */**POST */
   app.post("/urls/:id", (req, res) => {
@@ -242,6 +261,7 @@ app.get("/urls.json", (req, res) => {
       res.status(403).send("You do not have permission");
     }
   });
+
   app.post("/urls", (req, res) => {
     let short = randomstring.generate(6);
     urlDatabase[short] = {
@@ -251,4 +271,6 @@ app.get("/urls.json", (req, res) => {
     }
      res.redirect("/urls") 
    });
+
+ 
   
