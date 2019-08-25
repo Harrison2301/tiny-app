@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
 </head>
 <%- include partials/_header.ejs %>
+
 <body style="font-size:20px; padding:50px;">
-              <form method= "POST" action="/login" name ="user_id"> 
-                
-                <label>Email:</label>
-              <div>
-                  <input type="text" name="email">
-                  </div>
-                  <div>
-                  <label>Password:</label>
-                  </div>
-                 <input type="password" name="password">
-                 <div>
-                  <button type= "submit">Login</button>
-                  </div>
-              
-                </form>
+  <form method="POST" action="/login" name="user_id">
+
+    <label>Email:</label>
+    <div>
+      <input type="text" name="email">
+    </div>
+    <div>
+      <label>Password:</label>
+    </div>
+    <input type="password" name="password">
+    <div>
+      <button type="submit">Login</button>
+    </div>
+
+  </form>
 
 
 
 </body>
+
 </html>
-
-
-

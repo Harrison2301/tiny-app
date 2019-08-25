@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
 </head>
+
 <body style="font-size:20px; padding:50px;">
-    <header> 
-      <%- include partials/_header.ejs %>
-      </header>
-      <a href='/urls/new'> Create New TinyURL</a>
-      
-      <% if (user) { %>
-        <% Object.keys(urls).forEach(function(id) { %>
-          <% var url = urls[id] %>
-          <% if(url.userID === user_id) { %>
+  <header>
+    <%- include partials/_header.ejs %>
+  </header>
+  <a href='/urls/new'> Create New TinyURL</a>
 
-     
-    <ul>
-<li><a target="blank" href='/u/<%= url.shortURL %>'><%= url.shortURL %></a> : <%= url.longURL %></li>
+  <% if (user) { %>
+  <% Object.keys(urls).forEach(function(id) { %>
+  <% var url = urls[id] %>
+  <% if(url.userID === user_id) { %>
 
-  <form method="POST" action="/urls/<%= url.shortURL %>/delete">
-    <button type="submit" value="">Delete</button>
-    <a href="/urls/<%= url.shortURL %>">Edit</a>
-  </form>
-        <% } %> 
-        <% }); %>
-        </ul>
-    </ul>
+
+  <ul>
+    <li><a target="blank" href='/u/<%= url.shortURL %>'><%= url.shortURL %></a> : <%= url.longURL %></li>
+
+    <form method="POST" action="/urls/<%= url.shortURL %>/delete">
+      <button type="submit" value="">Delete</button>
+      <a href="/urls/<%= url.shortURL %>">Edit</a>
+    </form>
     <% } %>
+    <% }); %>
+  </ul>
+  </ul>
+  <% } %>
 
 </body>
+
 </html>
